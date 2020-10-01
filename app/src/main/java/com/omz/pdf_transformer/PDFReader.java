@@ -1,3 +1,4 @@
+//TEST
 package com.omz.pdf_transformer;
 
 import android.annotation.SuppressLint;
@@ -59,8 +60,6 @@ public class PDFReader extends AppCompatActivity {
         Button nextPageBtn = findViewById(R.id.nextPageBtn);
         Button previousPageBtn = findViewById(R.id.previousPageBtn);
         @SuppressLint("UseSwitchCompatOrMaterialCode") Switch formatSwitch = findViewById(R.id.formatSwtich);
-        String pdfFile = "MaxTract.pdf";
-        String pdfName = pdfFile.substring(0, pdfFile.length() - 4);
         final SharedPreferences pref = getSharedPreferences("MyPref", 0);
         final SharedPreferences.Editor editor = pref.edit();
         AssetManager assetManager = getAssets();
@@ -69,8 +68,7 @@ public class PDFReader extends AppCompatActivity {
             //PDDocument.load(pfd)
             int pageNumber = 1;
             editor.putInt("pageNumber", 0);
-            pdfPageNumberView.setText(String.valueOf(pageNumber));
-            pdfNameView.setText(pdfName);
+
 
             // Instantiate PDFTextStripper class
             PDFTextStripper pdfStripper = new PDFTextStripper();
