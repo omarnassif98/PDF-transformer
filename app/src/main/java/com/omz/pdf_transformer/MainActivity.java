@@ -16,13 +16,18 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MainActivity extends AppCompatActivity {
+import java.io.IOException;
 
+public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        try {
+            new Thread(new PDFContentManager(getApplicationContext())).start();
 
+        } catch (IOException e) {
+        }
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,10 +57,9 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("Activitycallback", String.format("ERROR: %s", Uri.parse(data.getDataString())));
                 Log.d("Activitycallback", String.format("ERROR: %s", data.getDataString()));
             }
-
-            //
-
-
-        }
         }
     }
+    public void Check(View view){
+        PDFContentManager.singleton.Check();
+    }
+}
