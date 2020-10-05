@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         try {
-            new Thread(new PDFContentManager(getApplicationContext())).start();
+            new PDFContentManager(getApplicationContext());
 
         } catch (IOException e) {
         }

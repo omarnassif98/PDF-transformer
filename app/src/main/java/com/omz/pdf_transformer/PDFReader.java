@@ -40,10 +40,6 @@ public class PDFReader extends AppCompatActivity {
         Intent intent = getIntent();
         Uri pdfURI = intent.getParcelableExtra("pdfURI");
         TextView pageView = findViewById(R.id.documentView);
-        try {
-            PDFContentManager.singleton.InitializeView(pageView, pdfURI, getContentResolver());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        PDFContentManager.singleton.ScrapePDF(pageView, pdfURI, getContentResolver());
     }
 }
