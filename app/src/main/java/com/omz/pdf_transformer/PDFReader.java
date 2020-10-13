@@ -36,7 +36,6 @@ public class PDFReader extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pdf_view);
-        PDFContentManager.singleton.Check();
         Intent intent = getIntent();
         Uri pdfURI = intent.getParcelableExtra("pdfURI");
         TextView pageView = findViewById(R.id.documentView);

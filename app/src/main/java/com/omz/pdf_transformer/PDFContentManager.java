@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -15,6 +16,7 @@ import com.tom_roush.pdfbox.util.PDFBoxResourceLoader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URI;
 
 
@@ -66,15 +68,16 @@ public class PDFContentManager {
                 pdfDoc = PDDocument.load(resolvedPDFMedia);
                 resolvedPDFMedia.close();
                 pagenum = 0;
-                pdfTextStripper.setStartPage(pagenum);
-                pdfTextStripper.setEndPage(pagenum + 1);
-                final String scrapedText = pdfTextStripper.getText(pdfDoc);
-                Log.d("SCRAPE", scrapedText);
+                InfoScraper pdfExtractor = new InfoScraper(pdfDoc);
+                pdfExtractor.setSortByPosition(true);
+                pdfExtractor.ScrapePage(0);
+                final String scrapedText = pdfExtractor.ScrapePage(0);
                 pdfDoc.close();
                 pageDisplay.post(new Runnable() {
                     @Override
                     public void run() {
                         pageDisplay.setText(scrapedText);
+                        pageDisplay.setMovementMethod(new ScrollingMovementMethod());
                     }
                 });
             } catch (FileNotFoundException e) {
@@ -83,9 +86,5 @@ public class PDFContentManager {
                 Log.e("Error", "IO Exception (Runnable)");
             }
         }
-    }
-
-    public void Check(){
-        Log.d("Check run", "Check " + PDFBoxResourceLoader.isReady());
     }
 }

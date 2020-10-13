@@ -59,7 +59,4 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-    public void Check(View view){
-        PDFContentManager.singleton.Check();
-    }
 }

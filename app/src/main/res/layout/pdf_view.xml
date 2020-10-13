@@ -7,84 +7,18 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/pdfNameView"
-        android:layout_width="134dp"
-        android:layout_height="42dp"
-        android:gravity="center"
-        android:text="Name"
-        android:textAllCaps="false"
-        android:textColor="#000000"
-        app:layout_constraintBottom_toTopOf="@+id/documentView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.708" />
-
-    <TextView
         android:id="@+id/documentView"
-        android:layout_width="376dp"
-        android:layout_height="515dp"
+        android:layout_width="359dp"
+        android:layout_height="669dp"
         android:fontFamily="serif"
         android:scrollbars="vertical"
-        android:text="Content"
+        android:text="Loading content..."
         android:textColor="#000000"
-        android:textSize="9.5sp"
+        android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.498" />
-
-    <TextView
-        android:id="@+id/pdfPageNumberView"
-        android:layout_width="128dp"
-        android:layout_height="34dp"
-        android:gravity="center"
-        android:text="Page"
-        android:textColor="#000000"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.508"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/documentView"
-        app:layout_constraintVertical_bias="0.336" />
-
-    <Button
-        android:id="@+id/previousPageBtn"
-        android:layout_width="59dp"
-        android:layout_height="33dp"
-        android:text="Prev"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.161"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/documentView"
-        app:layout_constraintVertical_bias="0.341" />
-
-    <Button
-        android:id="@+id/nextPageBtn"
-        android:layout_width="59dp"
-        android:layout_height="33dp"
-        android:text="Next"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.852"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/documentView"
-        app:layout_constraintVertical_bias="0.341" />
-
-    <Switch
-        android:id="@+id/formatSwtich"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Sim"
-        app:layout_constraintBottom_toTopOf="@+id/documentView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/pdfNameView"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintVertical_bias="0.258" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
