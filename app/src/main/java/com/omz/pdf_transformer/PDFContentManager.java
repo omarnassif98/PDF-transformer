@@ -114,7 +114,7 @@ public class PDFContentManager {
                 Log.d("TEMPLATE", "Color added, RULE " + rule);
                 break;
             case  "line_spacing":
-                list.add(new LineSpaceFormatter((int)value, rule));
+                //list.add(new LineSpaceFormatter((int)value, rule));
                 break;
             case "sentence_first_word":
                 for (Iterator<String> it = ((JSONObject) value).keys(); it.hasNext(); ) {
