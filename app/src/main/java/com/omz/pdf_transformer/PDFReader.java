@@ -14,6 +14,8 @@ import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -26,7 +28,9 @@ import com.tom_roush.pdfbox.text.PDFTextStripper;
 import com.tom_roush.pdfbox.util.PDFBoxResourceLoader;
 
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,6 +49,13 @@ public class PDFReader extends AppCompatActivity {
         Intent intent = getIntent();
         Uri pdfURI = intent.getParcelableExtra("pdfURI");
         TextView pageView = findViewById(R.id.documentView);
+        Toolbar myToolbar = findViewById(R.id.toolbar_pdfview);
+        setSupportActionBar(myToolbar);
+        ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("PDFroggy++");
         AssetManager am = getAssets();
         try {
             InputStream configFile = am.open("ReaderViewPreferences.json");
@@ -59,4 +70,35 @@ public class PDFReader extends AppCompatActivity {
         }
         PDFContentManager.singleton.ScrapePDF(pageView, pdfURI, getContentResolver());
     }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            Intent intent = new Intent(this, Settings.class);
+            startActivity(intent);
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 }
+
+
