@@ -1,8 +1,10 @@
 package com.omz.pdf_transformer;
 
+import android.graphics.Color;
 import android.text.ParcelableSpan;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 
 import java.lang.reflect.Constructor;

@@ -13,27 +13,14 @@ import androidx.annotation.RequiresApi;
 import java.util.ArrayList;
 
 public class LineSpaceFormatter extends FormatterObject{
-    int height;
     @RequiresApi(api = Build.VERSION_CODES.Q)
-    public LineSpaceFormatter(int height, int formattingRule){
-        this.height = height;
-        this.formattingRule = formattingRule;
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.Q)
-    @Override
-    public void ApplyTransformation(SpannableString blurb, int paragraphNumber) {
-        int spanCount;
-        if(this.formattingRule == 2){
-            spanCount = ((ArrayList<int[]>)PDFContentManager.singleton.GetFormatSpan("leadingWordSpans").get(paragraphNumber)).size();
-            Log.d("SPANCOUNT", "ApplyTransformation: " + spanCount);
-        }else {
-            spanCount = 1;
+    public LineSpaceFormatter(int color, int rule)  {
+        this.formattingRule = rule;
+        try {
+            this.spanConstructor = LineHeightSpan.Standard.class.getConstructor(int.class);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
         }
-        this.span = new ParcelableSpan[spanCount];
-        for (int i = 0; i < spanCount; i++){
-            this.span[i] = new LineHeightSpan.Standard(this.height);
-        }
-        super.ApplyTransformation(blurb,paragraphNumber);
+        this.argVals = new Object[] {color};
     }
 }
