@@ -22,17 +22,16 @@
         <item>Green</item>
         <item>purple</item>
     </string-array>
+    <string-array name="preference_template">
+        <item>VSTF</item>
+        <item>Jenga</item>
 
-    <string-array name="color_values">
-        <item>Black</item>
-        <item>White</item>
-        <item>Gray</item>
-        <item>Red</item>
-        <item>Blue</item>
-        <item>Yellow</item>
-        <item>Orange</item>
-        <item>Green</item>
-        <item>purple</item>
     </string-array>
+
+    <array name="text_decorations">
+        <item>Bold</item>
+        <item>Italic</item>
+        <item>Underline</item>
+    </array>
 
 </resources>

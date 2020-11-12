@@ -122,6 +122,7 @@ public class PDFContentManager {
             case "sentence_first_word":
                 for (Iterator<String> it = ((JSONObject) value).keys(); it.hasNext(); ) {
                     String k = it.next();
+
                     AddTemplate(k,((JSONObject)value).get(k),list, 2);
                 }
                 break;

@@ -1,116 +1,30 @@
 <androidx.preference.PreferenceScreen  xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+
+    <ListPreference
+        app:key="templates"
+        app:title="Template"
+        app:iconSpaceReserved="false"
+        app:entries="@array/preference_template"
+        app:entryValues="@array/preference_template"
+        />
+
     <PreferenceCategory app:title="Page Format"
         app:iconSpaceReserved="false">
 
-        <SwitchPreferenceCompat
-            app:key="separate_by_paragraph"
-            app:title="Separate by paragraph"
+        <Preference
+            app:fragment="com.omz.pdf_transformer.Settings$StaticSettingsFragment"
+            app:key="PagePref"
+            app:title="Static transformations"
             app:iconSpaceReserved="false"/>
 
-        <EditTextPreference
-            app:dependency="separate_by_paragraph"
-            app:key="paragraph_spacing"
-            app:title="Paragraph spacing"
-            app:summaryOff="@string/attachment_summary_off"
-            app:summaryOn="@string/attachment_summary_on"
-            app:useSimpleSummaryProvider="true"
+        <Preference
+            app:fragment="com.omz.pdf_transformer.Settings$StaticSettingsFragment"
+            app:key="dynamic"
+            app:title="Dynamic transformations"
             app:iconSpaceReserved="false"/>
 
-        <SwitchPreferenceCompat
-            app:key="hide_images"
-            app:title="Hide images"
-            app:enabled="true"
-            app:iconSpaceReserved="false"/>
 
-        <SwitchPreferenceCompat
-            app:key="show_read_page_option"
-            app:title="Show read page option"
-            app:iconSpaceReserved="false"/>
-
-        <SwitchPreferenceCompat
-            app:key="highlight_key_words"
-            app:title="Highlight key words"
-            app:iconSpaceReserved="false"/>
-
-        <SwitchPreferenceCompat
-            app:key="highlight_key_sentences"
-            app:title="Highlight key sentences"
-            app:iconSpaceReserved="false"/>
-
-        <ListPreference
-            app:defaultValue="white"
-            app:entries="@array/color_entries"
-            app:entryValues="@array/color_values"
-            app:key="background_color"
-            app:title="Background color"
-            app:useSimpleSummaryProvider="true"
-            app:iconSpaceReserved="false"/>
-
-        <EditTextPreference
-            app:key="font_size"
-            app:title="Font size"
-            app:useSimpleSummaryProvider="true"
-            app:iconSpaceReserved="false"/>
-
-        <ListPreference
-            app:defaultValue="black"
-            app:entries="@array/color_entries"
-            app:entryValues="@array/color_values"
-            app:key="font_color"
-            app:title="Font color"
-            app:useSimpleSummaryProvider="true"
-            app:iconSpaceReserved="false"/>
-
-        <ListPreference
-            app:defaultValue="cabral"
-            app:entries="@array/reply_entries"
-            app:entryValues="@array/reply_values"
-            app:key="font_style"
-            app:title="Font style"
-            app:useSimpleSummaryProvider="true"
-            app:iconSpaceReserved="false"/>
-
-    </PreferenceCategory>
-
-    <PreferenceCategory app:title="Gesture Format"
-        app:iconSpaceReserved="false">
-
-        <SwitchPreferenceCompat
-            app:key="separate_by_sentence"
-            app:title="Separate by sentence"
-            app:iconSpaceReserved="false"/>
-
-        <EditTextPreference
-            app:dependency="separate_by_sentence"
-            app:key="sentence_spacing"
-            app:title="Sentence spacing"
-            app:useSimpleSummaryProvider="true"
-            app:iconSpaceReserved="false"/>
-
-        <EditTextPreference
-            app:key="selection_font_size"
-            app:title="Font size"
-            app:useSimpleSummaryProvider="true"
-            app:iconSpaceReserved="false"/>
-
-        <ListPreference
-            app:defaultValue="black"
-            app:entries="@array/color_entries"
-            app:entryValues="@array/color_values"
-            app:key="font_color"
-            app:title="Font color"
-            app:useSimpleSummaryProvider="true"
-            app:iconSpaceReserved="false"/>
-
-        <ListPreference
-            app:defaultValue="Jenga"
-            app:entries="@array/reply_entries"
-            app:entryValues="@array/reply_values"
-            app:key="font_style"
-            app:title="Load predefined format"
-            app:summary="Jenga format"
-            app:iconSpaceReserved="false"/>
     </PreferenceCategory>
 </androidx.preference.PreferenceScreen >
