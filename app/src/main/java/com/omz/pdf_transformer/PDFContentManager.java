@@ -91,7 +91,7 @@ public class PDFContentManager {
             while (it.hasNext()) {
                 String key = it.next();
                 Log.d("JSON", "LoadSpanPreferences found active key " + key);
-                AddTemplate(key, activeTemplates.get(key), activeSpanTemplates,0);
+                UnpackFormatRule(key, activeTemplates.getJSONObject(key), activeSpanTemplates);
             }
             Log.d("JSON", "Active span count = " + activeSpanTemplates.size());
             JSONObject passiveTemplates = savedConfig.getJSONObject("passive_span_templates");
@@ -99,7 +99,7 @@ public class PDFContentManager {
             while (it.hasNext()){
                 String key = it.next();
                 Log.d("JSON", "LoadSpanPreferences found passive key " + key);
-                AddTemplate(key, passiveTemplates.get(key), passiveSpanTemplates,0);
+                UnpackFormatRule(key, passiveTemplates.getJSONObject(key), passiveSpanTemplates);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -107,24 +107,37 @@ public class PDFContentManager {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
+    void UnpackFormatRule(String formattingRule, JSONObject templates, ArrayList<FormatterObject> list) throws JSONException {
+        short formatRule = -1;
+        switch (formattingRule){
+            case "universal":
+                formatRule = 0;
+                break;
+            case "leading_words":
+                formatRule = 2;
+                break;
+            default:
+                Log.d("RULE", "Defaulted, unrecognized rule: " + formattingRule);
+                return;
+        }
+        Log.d("UNPACK", "UnpackFormatRule: added " + formattingRule);
+        for (Iterator<String> it = templates.keys(); it.hasNext(); ) {
+            String key = it.next();
+            AddTemplate(key, templates.get(key), list, formatRule);
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     void AddTemplate(String key, Object value, ArrayList<FormatterObject> list, int rule) throws JSONException {
         switch (key){
             case "text_color":
-                list.add(new ColorFormatter(Color.parseColor((String)value), rule));
-                Log.d("TEMPLATE", "Color added, RULE " + rule);
+                list.add(new ColorFormatter((String)value, rule));
                 break;
             case  "line_spacing":
                 list.add(new LineSpaceFormatter((int)value, rule));
                 break;
             case "text_size":
                 list.add(new TextSizeFormatter((int)value, rule));
-                break;
-            case "sentence_first_word":
-                for (Iterator<String> it = ((JSONObject) value).keys(); it.hasNext(); ) {
-                    String k = it.next();
-
-                    AddTemplate(k,((JSONObject)value).get(k),list, 2);
-                }
                 break;
             default:
                 Log.d("TEMPLATE", "Defaulted, unrecognized key: " + key);
@@ -159,6 +172,7 @@ public class PDFContentManager {
             try {
                 InputStream resolvedPDFMedia = androidContentResolver.openInputStream(PDFUri);
                 InfoScraper pdfExtractor = new InfoScraper(resolvedPDFMedia);
+                resolvedPDFMedia.close();
                 pagenum = 0;
                 pdfExtractor.setSortByPosition(true);
                 String scrapedText = pdfExtractor.ScrapePage(0);
@@ -167,6 +181,8 @@ public class PDFContentManager {
                 int paragraphBeginIdx = 0;
                 //Active templates are applied "under" clickable spans
                 //Clickable spans dont count as either passive or active because they don't actually apply transformations
+
+
                 if (activeSpanTemplates.size() > 0 && formatEndings.containsKey("paragraphSpans")) {
                     int i = 0;
                     for (int[] paragraphBounds : (ArrayList<int[]>)formatEndings.get("paragraphSpans")) {
@@ -190,8 +206,17 @@ public class PDFContentManager {
                         i++;
                     }
                 }
-                resolvedPDFMedia.close();
 
+                if (passiveSpanTemplates.size() > 0) {
+                    int i = 0;
+                    for (int[] paragraphBounds : (ArrayList<int[]>)formatEndings.get("paragraphSpans")) {
+                        final int finalI = i;
+                        for (ContentFormater span : passiveSpanTemplates){
+                            span.ApplyTransformation(formattedText, finalI);
+                        }
+                        i++;
+                    }
+                }
                 pageDisplay.post(new Runnable() {
                     @Override
                     public void run() {
@@ -231,5 +256,6 @@ public class PDFContentManager {
             formatEndings.put("sentenceSpans", sentenceSpans);
             formatEndings.put("leadingWordSpans", leadingWordSpans);
         }
+
     }
 }

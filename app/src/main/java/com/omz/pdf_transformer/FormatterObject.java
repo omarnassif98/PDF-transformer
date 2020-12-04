@@ -11,7 +11,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
-public class FormatterObject implements ContentFormater {
+public class  FormatterObject implements ContentFormater {
 
     public ParcelableSpan[] span = null;
     public int formattingRule;

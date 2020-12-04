@@ -1,6 +1,8 @@
 package com.omz.pdf_transformer;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -18,7 +20,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class MainActivity extends AppCompatActivity {
     @Override
@@ -33,6 +37,10 @@ public class MainActivity extends AppCompatActivity {
 
         } catch (IOException e) {
         }
+        Log.d("CONFIG", "PRE");
+        DeployAsset("ReaderViewPreference.json");
+        DeployAsset("ViewerTemplate.json");
+
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,7 +73,28 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
+    public void DeployAsset(String fName){
+        try {
+            if (!getBaseContext().getFileStreamPath(fName).exists()) {
+                Log.d("CONFIG", "Starting");
+                AssetManager am = getAssets();
+                InputStream configFile = am.open(fName);
+                int configFileSize = configFile.available();
+                byte[] rawData = new byte[configFileSize];
+                configFile.read(rawData);
+                configFile.close();
+                FileOutputStream outputStream;
+                outputStream = openFileOutput(fName , Context.MODE_PRIVATE);
+                outputStream.write(rawData);
+                outputStream.close();
+                Log.d("CONFIG", "Created");
+            }else {
+                Log.d("CONFIG", "onCreate: THE FILE EXISTS");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

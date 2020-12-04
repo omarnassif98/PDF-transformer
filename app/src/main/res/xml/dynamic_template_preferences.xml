@@ -14,7 +14,6 @@
             app:title="Text decoration"
             app:key="decoration_universal"
             app:entries="@array/dynamic_universal_text_decorations"
-            app:entryValues="@array/dynamic_universal_text_decorations"
             />
         <EditTextPreference
             android:title="Text size"

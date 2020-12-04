@@ -1,0 +1,11 @@
+{
+  "active_span_templates":
+  {
+    "universal": {
+      "line_spacing": 45
+    }
+  },
+  "passive_span_templates": {
+  }
+
+}
