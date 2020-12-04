@@ -1,0 +1,14 @@
+{
+  "active_span_templates": {
+    "universal": {
+      "line_spacing": 60
+    },
+    "leading_words": {
+      "text_color": "red"
+    }
+  },
+  "passive_span_templates": {
+
+  }
+
+}
