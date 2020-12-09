@@ -17,11 +17,6 @@
             app:entryValues="@array/dynamic_universal_text_decorations"
             />
         <EditTextPreference
-            android:title="Text size"
-            android:key="size_universal"
-            android:inputType="number"
-            />
-        <EditTextPreference
             android:title="Line spacing"
             android:key="spacing_universal"
             android:inputType="number"

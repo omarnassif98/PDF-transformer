@@ -4,7 +4,7 @@ import android.graphics.Color;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 
-public class ColorFormatter extends FormatterObject{
+public class ColorFormatter extends SpannableFormatterObject {
 
     public ColorFormatter(String color, int rule)  {
         this.formattingRule = rule;

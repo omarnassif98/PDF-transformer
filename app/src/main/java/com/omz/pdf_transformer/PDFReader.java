@@ -52,7 +52,9 @@ public class PDFReader extends AppCompatActivity {
         } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
-        PDFContentManager.singleton.ScrapePDF(pageView, pdfURI, getContentResolver());
+
+        PDFContentManager.singleton.ScrapePDF(pageView, pdfURI, getContentResolver(), getResources().getDisplayMetrics().density);
+
     }
 
     @Override
