@@ -6,31 +6,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include
-        android:id="@+id/include"
-        layout="@layout/toolbar_pdfview"
-        android:layout_width="411dp"
-        android:layout_height="56dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <TextView
         android:id="@+id/documentView"
-        android:layout_width="357dp"
-        android:layout_height="597dp"
+        android:layout_width="359dp"
+        android:layout_height="669dp"
         android:fontFamily="serif"
         android:scrollbars="vertical"
-        android:text="Loading\n\u0020\u0020\u0020\u0020content..."
+        android:text="Loading content..."
         android:textColor="#000000"
         android:textSize="12sp"
-        android:typeface="serif"
-        app:autoSizeTextType="none"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/include"
-        app:layout_constraintVertical_bias="0.461" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.258" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

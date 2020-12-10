@@ -2,14 +2,17 @@ package com.omz.pdf_transformer;
 
 import android.graphics.Color;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 
-public class ColorFormatter extends SpannableFormatterObject {
+import org.json.JSONArray;
 
-    public ColorFormatter(String color, int rule)  {
+public class DecoratorFormatter extends SpannableFormatterObject {
+
+    public DecoratorFormatter(JSONArray decorations, int rule)  {
         this.formattingRule = rule;
-        int colorVal = Color.parseColor(color);
-        Log.d("ADD", "ColorFormatter: " + color + colorVal);
+        for(int i = 0; i<decorations.length(); i++){
+
+        }
+        int colorVal = Color.parseColor("color");
         try {
             this.spanConstructor = ForegroundColorSpan.class.getConstructor(int.class);
         } catch (NoSuchMethodException e) {
