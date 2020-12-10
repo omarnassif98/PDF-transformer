@@ -46,6 +46,7 @@ public class FetchData extends AsyncTask<Void, Void, Void> {
                 if (line != "null")
                     data = data + line + "\n";
             }
+            Log.d("this is something", data);
         } catch (IOException ioException) {
             ioException.printStackTrace();
         }
