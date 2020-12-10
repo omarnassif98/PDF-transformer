@@ -10,8 +10,21 @@
         <item>reply_all</item>
     </string-array>
 
-    <!-- color Preference -->
-    <string-array name="color_entries">
+
+
+    <string-array name="preference_template">
+        <item>ViewerTemplate.json</item>
+
+    </string-array>
+
+    <array name="text_decorations">
+        <item>Bold</item>
+        <item>Italic</item>
+        <item>Underline</item>
+    </array>
+
+
+    <string-array name="color_static_universal_entries">
         <item>Black</item>
         <item>White</item>
         <item>Gray</item>
@@ -22,16 +35,38 @@
         <item>Green</item>
         <item>purple</item>
     </string-array>
-    <string-array name="preference_template">
-        <item>VSTF</item>
-        <item>Jenga</item>
 
+    <string-array name="dynamic_universal_color_entries">
+        <item>Black</item>
+        <item>White</item>
+        <item>Gray</item>
+        <item>Red</item>
+        <item>Blue</item>
+        <item>Yellow</item>
+        <item>Orange</item>
+        <item>Green</item>
+        <item>purple</item>
     </string-array>
 
-    <array name="text_decorations">
+    <array name="static_universal_text_decorations">
         <item>Bold</item>
         <item>Italic</item>
         <item>Underline</item>
     </array>
+
+    <array name="dynamic_universal_text_decorations">
+        <item>Bold</item>
+        <item>Italic</item>
+        <item>Underline</item>
+    </array>
+
+    <array name="line_spacing">
+        <item>Bold</item>
+        <item>Italic</item>
+        <item>Underline</item>
+    </array>
+
+
+
 
 </resources>

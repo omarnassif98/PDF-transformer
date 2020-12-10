@@ -85,6 +85,10 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, Settings.class);
             startActivity(intent);
         }
+        if (id == R.id.action_format_page) {
+            Intent intent = new Intent(this, FormatStorePage.class);
+            startActivity(intent);
+        }
 
         return super.onOptionsItemSelected(item);
     }

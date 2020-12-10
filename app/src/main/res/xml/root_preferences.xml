@@ -20,7 +20,7 @@
             app:iconSpaceReserved="false"/>
 
         <Preference
-            app:fragment="com.omz.pdf_transformer.Settings$StaticSettingsFragment"
+            app:fragment="com.omz.pdf_transformer.Settings$DynamicSettingsFragment"
             app:key="dynamic"
             app:title="Dynamic transformations"
             app:iconSpaceReserved="false"/>

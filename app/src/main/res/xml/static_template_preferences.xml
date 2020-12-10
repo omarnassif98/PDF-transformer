@@ -2,19 +2,48 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <PreferenceCategory
         app:iconSpaceReserved="false"
-        app:key="static_universal"
+        app:key="universal"
         app:title="All words">
         <ListPreference
-            app:entries="@array/color_entries"
-            app:key="static_universal_color"
+            app:entries="@array/color_static_universal_entries"
+            app:key="color_universal"
             app:title="Text color"
-            app:entryValues="@array/color_entries"/>
-    <MultiSelectListPreference
-        app:title="Text decoration"
-        app:key="universal_decoration"
-        app:entries="@array/text_decorations"
-        app:entryValues="@array/text_decorations"
-        />
+            app:entryValues="@array/color_static_universal_entries"
+            />
+        <MultiSelectListPreference
+            app:title="Text decoration"
+            app:key="decoration_universal"
+            app:entries="@array/dynamic_universal_text_decorations"
+            app:entryValues="@array/dynamic_universal_text_decorations"
+            />
+        <EditTextPreference
+            android:title="Line spacing"
+            android:key="spacing_universal"
+            android:inputType="number"
+            />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:key="leading_words"
+        app:title="Leading words">
+        <ListPreference
+            app:entries="@array/color_static_universal_entries"
+            app:key="color_leading"
+            app:title="Text color"
+            app:entryValues="@array/color_static_universal_entries"
+            />
+        <MultiSelectListPreference
+            app:title="Text decoration"
+            app:key="decoration_leading"
+            app:entries="@array/dynamic_universal_text_decorations"
+            app:entryValues="@array/dynamic_universal_text_decorations"
+            />
+        <EditTextPreference
+            android:title="Text size"
+            android:key="size_leading"
+            android:inputType="number"
+            />
     </PreferenceCategory>
 
 </androidx.preference.PreferenceScreen>
