@@ -87,9 +87,8 @@ public class MainActivity extends AppCompatActivity {
                 outputStream = openFileOutput(fName , Context.MODE_PRIVATE);
                 outputStream.write(rawData);
                 outputStream.close();
-                Log.d("CONFIG", "Created");
             }else {
-                Log.d("CONFIG", "onCreate: THE FILE EXISTS");
+
             }
         } catch (IOException e) {
             e.printStackTrace();

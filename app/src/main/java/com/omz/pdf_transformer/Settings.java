@@ -38,6 +38,9 @@ public class Settings extends AppCompatActivity implements PreferenceFragmentCom
         singleton = this;
         Log.d("SETtings", "Settings: SINGLETON SET");
     }
+    public String[] ListFiles(){
+        return getBaseContext().fileList();
+    }
     public void LoadFile(String fileName){
         try {
             InputStream configFile = getBaseContext().openFileInput(fileName);
@@ -48,7 +51,8 @@ public class Settings extends AppCompatActivity implements PreferenceFragmentCom
             JSONObject configJSON = new JSONObject(new String(rawData, "UTF-8"));
             staticTemplatePrefs = new JSONObject(configJSON.getJSONObject("passive_span_templates").toString());
             dynamicTemplatePrefs = new JSONObject(configJSON.getJSONObject("active_span_templates").toString());
-            Log.d("TAG", "Settings: JSON SET");
+            Log.d("LOAD", "Static: " + staticTemplatePrefs.toString());
+            Log.d("LOAD", "Dynamic: " + dynamicTemplatePrefs.toString());
         }catch (Exception ex){
             Log.d("JSON", "ERROR");
         }
@@ -74,7 +78,6 @@ public class Settings extends AppCompatActivity implements PreferenceFragmentCom
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("Created", "onCreate");
         setContentView(R.layout.settings_activity);
         getSupportFragmentManager()
                 .beginTransaction()
@@ -86,7 +89,9 @@ public class Settings extends AppCompatActivity implements PreferenceFragmentCom
         assert actionBar != null;
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
-        LoadFile("ReaderViewPreference.json");
+        SharedPreferences formatPref = getPreferences(MODE_PRIVATE);
+        LoadFile(formatPref.getString("Json_format_file", "ReaderViewPreference.json"));
+
     }
     public void SaveJSONPrefs() throws IOException {
         JSONObject newConfig = new JSONObject();
@@ -109,16 +114,18 @@ public class Settings extends AppCompatActivity implements PreferenceFragmentCom
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             Log.d("Frag", "Base");
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
-            for (int i = 0; i < getPreferenceScreen().getPreferenceCount(); i++) {
-                Log.d("CREATION", "onCreatePreferences: " + getPreferenceScreen().getPreference(i).getKey());
-                getPreferenceScreen().getPreference(i).setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                    @Override
-                    public boolean onPreferenceChange(Preference preference, Object newValue) {
-                        Settings.singleton.LoadFile((String)newValue);
-                        return true;
-                    }
-                });
-            }
+            String[] entries = Settings.singleton.ListFiles();
+            ((ListPreference)getPreferenceScreen().getPreference(0)).setEntries(entries);
+            ((ListPreference)getPreferenceScreen().getPreference(0)).setEntryValues(entries);
+
+
+            getPreferenceScreen().getPreference(0).setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    Settings.singleton.LoadFile((String)newValue);
+                    return true;
+                }
+            });
         }
 
         @Override
