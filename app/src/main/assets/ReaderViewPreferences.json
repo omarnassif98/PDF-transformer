@@ -1,0 +1,21 @@
+{
+  "active_span_templates":
+  {
+    "line_spacing" : 45,
+    "text_color" : "red",
+    "sentence_first_word":
+        {
+          "text_size": 45,
+          "text_color": "blue"
+        }
+  },
+  "passive_span_templates":
+    {
+      "paragraph_first_word":
+        [
+          {
+            "text_size":42
+          }
+        ]
+    }
+}
