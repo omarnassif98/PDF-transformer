@@ -40,7 +40,6 @@ public class PDFContentManager {
     PDDocument pdfDoc;
     PDFTextStripper pdfTextStripper;
     ArrayList<ContentFormater> activeSpanTemplates = new ArrayList<ContentFormater>(), passiveSpanTemplates = new ArrayList<ContentFormater>();
-    ArrayList<ParcelableSpan> instantiatedActiveSpans = new ArrayList<ParcelableSpan>(), instantiatedPassiveSpans = new ArrayList<ParcelableSpan>();
     HashMap<String, Object> formatInfo = new HashMap<String, Object>();
     boolean cascadeFlag = false;
     public PDFContentManager(Context context) throws IOException {
@@ -52,9 +51,9 @@ public class PDFContentManager {
         new Thread(pdfBoxInitializerWorker).start();
     }
 
-    public void ScrapePDF(final TextView pageDisplay, Uri PDFUri, ContentResolver androidContentResolver, float screenDensity){
+    public void ScrapePDF(final TextView pageDisplay, Uri PDFUri, ContentResolver androidContentResolver, int pagenum){
         this.pageDisplay = pageDisplay;
-        PDFScraper pdfScraperWorker = new PDFScraper(PDFUri,androidContentResolver, screenDensity);
+        PDFScraper pdfScraperWorker = new PDFScraper(PDFUri,androidContentResolver, pagenum);
         new Thread(pdfScraperWorker).start();
     }
 
@@ -165,15 +164,16 @@ public class PDFContentManager {
             PDFBoxResourceLoader.init(context);
         }
     }
+
     public class PDFScraper implements Runnable {
 
         private Uri PDFUri;
         ContentResolver androidContentResolver;
-        float res;
-        public PDFScraper(Uri PDFUri, ContentResolver androidContentResolver, float res){
+        int pageNum;
+        public PDFScraper(Uri PDFUri, ContentResolver androidContentResolver, int page){
             this.PDFUri = PDFUri;
             this.androidContentResolver = androidContentResolver;
-            this.res = res;
+            this.pageNum = pagenum;
         }
 
         @RequiresApi(api = Build.VERSION_CODES.R)
@@ -184,16 +184,16 @@ public class PDFContentManager {
                 resolvedPDFMedia.close();
                 pagenum = 0;
                 pdfExtractor.setSortByPosition(true);
-                String scrapedText = pdfExtractor.ScrapePage(0);
+                String scrapedText = pdfExtractor.ScrapePage(pageNum);
                 UpdateFormatInfo(scrapedText);
                 final SpannableStringBuilder formattedText = new SpannableStringBuilder(scrapedText);
                 int paragraphBeginIdx = 0;
                 //Active templates are applied "under" clickable spans
                 //Clickable spans dont count as either passive or active because they don't actually apply transformations
 
-                final AppendingFormatterObject cpl = new AppendingFormatterObject(pageDisplay, res);
+                final AppendingFormatterObject cpl = new AppendingFormatterObject(pageDisplay);
                 if(cascadeFlag){
-                    activeSpanTemplates.add(new AppendingFormatterObject(pageDisplay, res));
+                    activeSpanTemplates.add(new AppendingFormatterObject(pageDisplay));
                 }
                 if (activeSpanTemplates.size() > 0 && formatInfo.containsKey("paragraphSpans")) {
                     int i = 0;
@@ -248,27 +248,22 @@ public class PDFContentManager {
 
         void UpdateFormatInfo(String extractedText){
             ArrayList<int[]> paragraphEndings = new ArrayList<int[]>();
-            ArrayList<ArrayList<int[]>> sentenceSpans = new ArrayList<ArrayList<int[]>>();
             ArrayList<ArrayList<int[]>> leadingWordSpans = new ArrayList<ArrayList<int[]>>();
             int paragraphStartIdx = 0;
             for (String paragraphObj : extractedText.split("\n")){
-                ArrayList<int[]> localSentenceSpans = new ArrayList<int[]>();
                 ArrayList<int[]> localLeadingWordSpans = new ArrayList<int[]>();
                 int sentenceStartIdx = 0;
                 int sentenceEndIdx = paragraphObj.indexOf('.');
                 while (sentenceEndIdx >= 0){
-                    localSentenceSpans.add(new int[] {paragraphStartIdx + sentenceStartIdx,paragraphStartIdx + sentenceEndIdx});
                     localLeadingWordSpans.add(new int[] {paragraphStartIdx + sentenceStartIdx,paragraphStartIdx + paragraphObj.indexOf(' ', sentenceStartIdx + 3)});
                     sentenceStartIdx = sentenceEndIdx + 2;
                     sentenceEndIdx = paragraphObj.indexOf('.', sentenceEndIdx +1);
                 }
-                sentenceSpans.add(localSentenceSpans);
                 leadingWordSpans.add(localLeadingWordSpans);
                 paragraphEndings.add(new int[] {paragraphStartIdx, paragraphStartIdx + paragraphObj.length() - 1});
                 paragraphStartIdx += (paragraphObj.length() + 1);
             }
             formatInfo.put("paragraphSpans", paragraphEndings);
-            formatInfo.put("sentenceSpans", sentenceSpans);
             formatInfo.put("leadingWordSpans", leadingWordSpans);
         }
 

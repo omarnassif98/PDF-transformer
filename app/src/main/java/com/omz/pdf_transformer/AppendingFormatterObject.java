@@ -16,8 +16,7 @@ public class AppendingFormatterObject implements ContentFormater {
     TextPaint universalPaint, leadingPaint;
     ArrayList<int[]> addedSpans;
     @RequiresApi(api = Build.VERSION_CODES.R)
-    public  AppendingFormatterObject(TextView textView, float screenResolution){
-        Log.d("RES", "Res: " + screenResolution);
+    public  AppendingFormatterObject(TextView textView){
         lineWidth = textView.getWidth();
         universalPaint = new TextPaint();
         universalPaint.setTypeface(textView.getPaint().getTypeface());
