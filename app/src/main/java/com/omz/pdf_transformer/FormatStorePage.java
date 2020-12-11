@@ -1,58 +1,61 @@
-//TEST
-package com.omz.pdf_transformer;
+    package com.omz.pdf_transformer;
 
+import android.content.Context;
 import android.content.Intent;
-import android.content.res.AssetManager;
-import android.net.Uri;
-import android.os.Build;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
 
-public class PDFReader extends AppCompatActivity {
+public class FormatStorePage extends AppCompatActivity {
+    static ListView formatNamesListView;
+    static TextView formatNameView;
+    public static String stringData = "  ";
+    static ArrayList<String> formatNamesList;
+    static ArrayAdapter formatNamesListAdapter;
+    String filePath;
+    Context context;
 
-    @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.pdf_view);
-        Intent intent = getIntent();
-        Uri pdfURI = intent.getParcelableExtra("pdfURI");
-        TextView pageView = findViewById(R.id.documentView);
-        Toolbar myToolbar = findViewById(R.id.toolbar_pdfview);
+        context = getBaseContext();
+        setContentView(R.layout.format_store);
+        Toolbar myToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
         ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("PDFroggy++");
-        AssetManager am = getAssets();
-        try {
-            InputStream configFile = getBaseContext().openFileInput("ReaderViewPreference.json");
-            int configFileSize = configFile.available();
-            byte[] rawData = new byte[configFileSize];
-            configFile.read(rawData);
-            configFile.close();
-            JSONObject configJSON = new JSONObject(new String(rawData, "UTF-8"));
-            Log.d("READERPREFS", configJSON.toString());
-            PDFContentManager.singleton.LoadSpanPreferences(configJSON);
-        } catch (IOException | JSONException e) {
-            e.printStackTrace();
-        }
-        PDFContentManager.singleton.ScrapePDF(pageView, pdfURI, getContentResolver(), 0);
+        formatNamesListView = findViewById(R.id.formatNamesListView);
+        formatNameView = findViewById(R.id.formatNamesText);
+        formatNamesList = new ArrayList<>();
+        FetchData process = new FetchData(context);
+        process.execute();
     }
 
     @Override
@@ -80,12 +83,7 @@ public class PDFReader extends AppCompatActivity {
             Intent intent = new Intent(this, Settings.class);
             startActivity(intent);
         }
-        if (id == R.id.action_format_store) {
-            Intent intent = new Intent(this, FormatStorePage.class);
-            startActivity(intent);
-        }
+
         return super.onOptionsItemSelected(item);
     }
 }
-
-
