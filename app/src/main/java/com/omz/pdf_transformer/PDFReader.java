@@ -2,6 +2,7 @@
 package com.omz.pdf_transformer;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.net.Uri;
 import android.os.Build;
@@ -9,12 +10,16 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import com.tom_roush.pdfbox.text.PDFTextStripper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,8 +35,9 @@ public class PDFReader extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pdf_view);
         Intent intent = getIntent();
-        Uri pdfURI = intent.getParcelableExtra("pdfURI");
-        TextView pageView = findViewById(R.id.documentView);
+        final Uri pdfURI = intent.getParcelableExtra("pdfURI");
+        final TextView pageView = findViewById(R.id.documentView);
+        final TextView pdfPageNumberView = findViewById(R.id.pdfPageNumberView);
         Toolbar myToolbar = findViewById(R.id.toolbar_pdfview);
         setSupportActionBar(myToolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -52,7 +58,38 @@ public class PDFReader extends AppCompatActivity {
         } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
+        final SharedPreferences pref = getSharedPreferences("MyPref", 0);
+        final SharedPreferences.Editor editor = pref.edit();
+        int pageNumber = 0;
+        editor.putInt("pageNumber", 0);
         PDFContentManager.singleton.ScrapePDF(pageView, pdfURI, getContentResolver(), 0);
+        ImageButton previousPageBtn = findViewById(R.id.previousPageBtn);
+        previousPageBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                int pageNumber = pref.getInt("pageNumber", 1) - 1;
+                if (pageNumber != 0) {
+                    editor.putInt("pageNumber", pageNumber);
+                    editor.apply();
+                    PDFContentManager.singleton.ScrapePDF(pageView, pdfURI, getContentResolver(), pageNumber);
+                }
+            }
+        });
+
+        ImageButton nextPageBtn = findViewById(R.id.nextPageBtn);
+        nextPageBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                int pageNumber = pref.getInt("pageNumber", 1) + 1;
+                if ((pageNumber <= 10)) {
+                    editor.putInt("pageNumber", pageNumber);
+                    editor.apply();
+                    PDFContentManager.singleton.ScrapePDF(pageView, pdfURI, getContentResolver(), pageNumber);
+                    String displayPageNumber = pageNumber + " of " + 10;
+                    pdfPageNumberView.setText(displayPageNumber);
+                }
+            }
+        });
+
+
     }
 
     @Override

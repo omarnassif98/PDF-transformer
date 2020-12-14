@@ -8,17 +8,23 @@
 
     <include
         android:id="@+id/include"
-        layout="@layout/toolbar_pdfview"
+        layout="@layout/top_toolbar_pdfview"
         android:layout_width="411dp"
         android:layout_height="56dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <include
+        android:id="@+id/include"
+        layout="@layout/bottom_toolbar_pageview"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="-48dp" />
+
     <TextView
         android:id="@+id/documentView"
-        android:layout_width="357dp"
-        android:layout_height="597dp"
+        android:layout_width="359dp"
+        android:layout_height="529dp"
         android:fontFamily="serif"
         android:scrollbars="vertical"
         android:text="Loading\n\u0020\u0020\u0020\u0020content..."
@@ -28,9 +34,7 @@
         app:autoSizeTextType="none"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/include"
-        app:layout_constraintVertical_bias="0.461" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
