@@ -18,14 +18,6 @@ public class SpannableFormatterObject implements ContentFormater {
     public int formattingRule;
     public Constructor spanConstructor;
     public Object[] argVals;
-    @Override
-    public void ApplyTransformation(SpannableStringBuilder blurb, ArrayList formatInfo) {
-        switch (formattingRule){
-            case 0:
-
-                //blurb.setSpan(span,);
-        }
-    }
 
     @Override
     public void ApplyTransformation(SpannableStringBuilder blurb, int paragraphNumber) {

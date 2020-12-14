@@ -24,11 +24,10 @@ public class AppendingFormatterObject implements ContentFormater {
             universalPaint.setTextSize((int)PDFContentManager.singleton.GetFormatSpan("universal_size"));
         }catch (Exception err){
             universalPaint.setTextSize(32);
+            Log.d("ERROR", "couldn't find universal size");
         }
         Log.d("RES", "Size: " + universalPaint.getTextSize());
-        Log.d("RES", "Actual size: " + textView.getPaint().getTextSize());
         Log.d("RES", "Measure: " + universalPaint.measureText(" "));
-        Log.d("RES", "Actual measure: " + textView.getPaint().measureText(" "));
 
         leadingPaint = new TextPaint();
         leadingPaint.setTypeface(textView.getPaint().getTypeface());
@@ -36,15 +35,11 @@ public class AppendingFormatterObject implements ContentFormater {
             leadingPaint.setTextSize((int)PDFContentManager.singleton.GetFormatSpan("leading_word_size"));
         }catch (Exception err){
             leadingPaint.setTextSize(32);
+            Log.d("ERROR", "couldn't find leading word size");
         }
         Log.d("RES", "Lead size: " + leadingPaint.getTextSize());
         Log.d("RES", "Lead measure: " + leadingPaint.measureText(" "));
         addedSpans = new ArrayList<int[]>();
-    }
-
-    @Override
-    public void ApplyTransformation(SpannableStringBuilder blurb, ArrayList formatInfo) {
-
     }
 
     @Override

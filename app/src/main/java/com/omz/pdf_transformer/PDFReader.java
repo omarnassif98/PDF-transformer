@@ -52,43 +52,38 @@ public class PDFReader extends AppCompatActivity {
             byte[] rawData = new byte[configFileSize];
             configFile.read(rawData);
             configFile.close();
-            JSONObject configJSON = new JSONObject(new String(rawData, "UTF-8"));
+            final JSONObject configJSON = new JSONObject(new String(rawData, "UTF-8"));
             Log.d("READERPREFS", configJSON.toString());
             PDFContentManager.singleton.LoadSpanPreferences(configJSON);
+            final int[] pageNumber = {0};
+            ImageButton previousPageBtn = findViewById(R.id.previousPageBtn);
+            PDFContentManager.singleton.ScrapePDF(pageView, pdfURI, getContentResolver(), pageNumber[0]);
+            previousPageBtn.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    PDFContentManager.singleton.Decomission();
+                    PDFContentManager.singleton.LoadSpanPreferences(configJSON);
+                    pageNumber[0]--;
+                    PDFContentManager.singleton.ScrapePDF(pageView, pdfURI, getContentResolver(), pageNumber[0]);
+
+                    pdfPageNumberView.setText(String.valueOf(pageNumber[0]));
+                }
+            });
+
+            ImageButton nextPageBtn = findViewById(R.id.nextPageBtn);
+            nextPageBtn.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    PDFContentManager.singleton.Decomission();
+                    PDFContentManager.singleton.LoadSpanPreferences(configJSON);
+                    pageNumber[0]++;
+                    PDFContentManager.singleton.ScrapePDF(pageView, pdfURI, getContentResolver(), pageNumber[0]);
+
+                    pdfPageNumberView.setText(String.valueOf(pageNumber[0]));
+                }
+            });
+
         } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
-        final SharedPreferences pref = getSharedPreferences("MyPref", 0);
-        final SharedPreferences.Editor editor = pref.edit();
-        int pageNumber = 0;
-        editor.putInt("pageNumber", 0);
-        PDFContentManager.singleton.ScrapePDF(pageView, pdfURI, getContentResolver(), 0);
-        ImageButton previousPageBtn = findViewById(R.id.previousPageBtn);
-        previousPageBtn.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                int pageNumber = pref.getInt("pageNumber", 1) - 1;
-                if (pageNumber != 0) {
-                    editor.putInt("pageNumber", pageNumber);
-                    editor.apply();
-                    PDFContentManager.singleton.ScrapePDF(pageView, pdfURI, getContentResolver(), pageNumber);
-                }
-            }
-        });
-
-        ImageButton nextPageBtn = findViewById(R.id.nextPageBtn);
-        nextPageBtn.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                int pageNumber = pref.getInt("pageNumber", 1) + 1;
-                if ((pageNumber <= 10)) {
-                    editor.putInt("pageNumber", pageNumber);
-                    editor.apply();
-                    PDFContentManager.singleton.ScrapePDF(pageView, pdfURI, getContentResolver(), pageNumber);
-                    String displayPageNumber = pageNumber + " of " + 10;
-                    pdfPageNumberView.setText(displayPageNumber);
-                }
-            }
-        });
-
 
     }
 
@@ -96,6 +91,12 @@ public class PDFReader extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+    @Override
+    public void onBackPressed(){
+        PDFContentManager.singleton.Decomission();
+        Log.d("DECOMISSIONED", "Decommisioned");
+        super.onBackPressed();
     }
 
     @Override

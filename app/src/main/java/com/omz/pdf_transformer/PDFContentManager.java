@@ -39,7 +39,9 @@ public class PDFContentManager {
     TextView pageDisplay = null;
     PDDocument pdfDoc;
     PDFTextStripper pdfTextStripper;
-    ArrayList<ContentFormater> activeSpanTemplates = new ArrayList<ContentFormater>(), passiveSpanTemplates = new ArrayList<ContentFormater>();
+    ArrayList<ContentFormater> activeSpanTemplates = new ArrayList<ContentFormater>(), passiveSpanTemplates = new ArrayList<ContentFormater>(), instantiatedTransformations = new ArrayList<ContentFormater>();
+    ArrayList<ClickableSpan> instantiatedListeners = new ArrayList<ClickableSpan>();
+    PDFScraper pdfScraperWorker;
     HashMap<String, Object> formatInfo = new HashMap<String, Object>();
     boolean cascadeFlag = false;
     public PDFContentManager(Context context) throws IOException {
@@ -53,7 +55,10 @@ public class PDFContentManager {
 
     public void ScrapePDF(final TextView pageDisplay, Uri PDFUri, ContentResolver androidContentResolver, int pagenum){
         this.pageDisplay = pageDisplay;
-        PDFScraper pdfScraperWorker = new PDFScraper(PDFUri,androidContentResolver, pagenum);
+        if(pdfScraperWorker == null) {
+            pdfScraperWorker = new PDFScraper(PDFUri, androidContentResolver);
+        }
+        pdfScraperWorker.SwitchPage(pagenum);
         new Thread(pdfScraperWorker).start();
     }
 
@@ -69,6 +74,7 @@ public class PDFContentManager {
     @RequiresApi(api = Build.VERSION_CODES.Q)
     public void LoadSpanPreferences(JSONObject savedConfig){
         //Update with actual file
+        formatInfo.clear();
         try {
             JSONObject activeTemplates = savedConfig.getJSONObject("active_span_templates");
 
@@ -153,6 +159,9 @@ public class PDFContentManager {
         return formatInfo.get(key);
     }
 
+    public void Decomission(){
+        pdfScraperWorker.ClearSpans();
+    }
     public class PDFBoxInitializer implements Runnable {
         Context context;
         public PDFBoxInitializer(Context context){
@@ -169,29 +178,43 @@ public class PDFContentManager {
 
         private Uri PDFUri;
         ContentResolver androidContentResolver;
+        SpannableStringBuilder formattedText;
         int pageNum;
-        public PDFScraper(Uri PDFUri, ContentResolver androidContentResolver, int page){
+        public PDFScraper(Uri PDFUri, ContentResolver androidContentResolver){
             this.PDFUri = PDFUri;
             this.androidContentResolver = androidContentResolver;
+        }
+        public void SwitchPage(int pagenum){
             this.pageNum = pagenum;
         }
-
+        public void ClearSpans(){
+            for(ClickableSpan span : instantiatedListeners){
+                formattedText.removeSpan(span);
+            }
+            instantiatedListeners.clear();
+            for(ContentFormater span : activeSpanTemplates){
+                span.ClearTransformations(formattedText);
+            }
+            activeSpanTemplates.clear();
+            for(ContentFormater span : passiveSpanTemplates){
+                span.ClearTransformations(formattedText);
+            }
+            passiveSpanTemplates.clear();
+        }
         @RequiresApi(api = Build.VERSION_CODES.R)
         public void run() {
             try {
                 InputStream resolvedPDFMedia = androidContentResolver.openInputStream(PDFUri);
                 InfoScraper pdfExtractor = new InfoScraper(resolvedPDFMedia);
                 resolvedPDFMedia.close();
-                pagenum = 0;
                 pdfExtractor.setSortByPosition(true);
+
                 String scrapedText = pdfExtractor.ScrapePage(pageNum);
+                Log.d("PAGE " + pageNum, scrapedText);
                 UpdateFormatInfo(scrapedText);
-                final SpannableStringBuilder formattedText = new SpannableStringBuilder(scrapedText);
-                int paragraphBeginIdx = 0;
+                formattedText = new SpannableStringBuilder(scrapedText);
                 //Active templates are applied "under" clickable spans
                 //Clickable spans dont count as either passive or active because they don't actually apply transformations
-
-                final AppendingFormatterObject cpl = new AppendingFormatterObject(pageDisplay);
                 if(cascadeFlag){
                     activeSpanTemplates.add(new AppendingFormatterObject(pageDisplay));
                 }
@@ -204,6 +227,7 @@ public class PDFContentManager {
                             public void onClick(@NonNull View widget) {
                                 for (ContentFormater span : activeSpanTemplates){
                                     span.ClearTransformations(formattedText);
+
                                 }
                                 for (ContentFormater span : activeSpanTemplates){
                                     span.ApplyTransformation(formattedText, finalI);
@@ -217,6 +241,7 @@ public class PDFContentManager {
                             }
                         };
                         formattedText.setSpan(focusEvent,paragraphBounds[0],paragraphBounds[1],Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+                        instantiatedListeners.add(focusEvent);
                         i++;
                     }
                 }

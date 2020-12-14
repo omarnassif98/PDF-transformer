@@ -53,6 +53,10 @@ public class Settings extends AppCompatActivity implements PreferenceFragmentCom
             dynamicTemplatePrefs = new JSONObject(configJSON.getJSONObject("active_span_templates").toString());
             Log.d("LOAD", "Static: " + staticTemplatePrefs.toString());
             Log.d("LOAD", "Dynamic: " + dynamicTemplatePrefs.toString());
+            SharedPreferences formatPref = getPreferences(MODE_PRIVATE);
+            SharedPreferences.Editor editor= formatPref.edit();
+            editor.putString("Json_format_file", fileName);
+            editor.apply();
         }catch (Exception ex){
             Log.d("JSON", "ERROR");
         }
@@ -101,7 +105,8 @@ public class Settings extends AppCompatActivity implements PreferenceFragmentCom
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        FileOutputStream outputStream = openFileOutput("ReaderViewPreference.json", Context.MODE_PRIVATE);
+        SharedPreferences formatPref = getPreferences(MODE_PRIVATE);
+        FileOutputStream outputStream = openFileOutput(formatPref.getString("Json_format_file", "ReaderViewPreference.json"), Context.MODE_PRIVATE);
         outputStream.write(newConfig.toString().getBytes());
         outputStream.close();
         Log.d("TAG", "SaveJSONPrefs: WRITTEN");
