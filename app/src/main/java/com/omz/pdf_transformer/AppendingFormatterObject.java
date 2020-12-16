@@ -14,7 +14,9 @@ import java.util.ArrayList;
 public class AppendingFormatterObject implements ContentFormater {
     int lineWidth;
     TextPaint universalPaint, leadingPaint;
-    ArrayList<int[]> addedSpans;
+    ArrayList<int[]> addedSpans = new ArrayList<int[]>();;
+
+    //Sets up two TextPaint objects that keep track of the size of leading and universal text respectively
     @RequiresApi(api = Build.VERSION_CODES.R)
     public  AppendingFormatterObject(TextView textView){
         lineWidth = textView.getWidth();
@@ -39,9 +41,13 @@ public class AppendingFormatterObject implements ContentFormater {
         }
         Log.d("RES", "Lead size: " + leadingPaint.getTextSize());
         Log.d("RES", "Lead measure: " + leadingPaint.measureText(" "));
-        addedSpans = new ArrayList<int[]>();
     }
 
+    //Applies Jenga-Cascade format for now but can easily be made to work with more formats through algorithm design
+    /*
+    Gets entire paragraph as a string and measures the screen space of the text with the two TextPaint objects initialized in the constructor.
+    At the end of every sentence, a newline character is added along with whitespace equivalent to the horizontal position of the end of the last sentence.
+     */
     @Override
     public void ApplyTransformation(SpannableStringBuilder blurb, int paragraphNumber) {
         Log.d("Appending", "(Jenga) Format for paragraph " + paragraphNumber);
@@ -80,6 +86,7 @@ public class AppendingFormatterObject implements ContentFormater {
         }
     }
 
+    //Additions are cleared backwards so as not to delete the wrong text
     @Override
     public void ClearTransformations(SpannableStringBuilder blurb) {
         for (int i = addedSpans.size()-1; i >= 0; i--){

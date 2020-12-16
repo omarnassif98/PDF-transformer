@@ -33,15 +33,23 @@ import java.util.Iterator;
 
 
 public class PDFContentManager {
+
     public static  PDFContentManager singleton;
     Context context;
+
     int pagenum, x = 0;
     TextView pageDisplay = null;
     PDDocument pdfDoc;
     PDFTextStripper pdfTextStripper;
-    ArrayList<ContentFormater> activeSpanTemplates = new ArrayList<ContentFormater>(), passiveSpanTemplates = new ArrayList<ContentFormater>(), instantiatedTransformations = new ArrayList<ContentFormater>();
+
+
+    ArrayList<ContentFormater> activeSpanTemplates = new ArrayList<ContentFormater>(), passiveSpanTemplates = new ArrayList<ContentFormater>();
     ArrayList<ClickableSpan> instantiatedListeners = new ArrayList<ClickableSpan>();
+
+
     PDFScraper pdfScraperWorker;
+
+
     HashMap<String, Object> formatInfo = new HashMap<String, Object>();
     boolean cascadeFlag = false;
     public PDFContentManager(Context context) throws IOException {
@@ -52,7 +60,7 @@ public class PDFContentManager {
         PDFBoxInitializer pdfBoxInitializerWorker = new PDFBoxInitializer(context);
         new Thread(pdfBoxInitializerWorker).start();
     }
-
+    //Starts up new thread, thread scrapes content from a page
     public void ScrapePDF(final TextView pageDisplay, Uri PDFUri, ContentResolver androidContentResolver, int pagenum){
         this.pageDisplay = pageDisplay;
         if(pdfScraperWorker == null) {
@@ -62,6 +70,8 @@ public class PDFContentManager {
         new Thread(pdfScraperWorker).start();
     }
 
+    //After any transformations happen, the changes have to be posted
+    //This is done because the changes are made on a seperate thread than the main UI thread
     public void UpdateTextView(final CharSequence updatedText){
         pageDisplay.post(new Runnable() {
             @Override
@@ -71,6 +81,8 @@ public class PDFContentManager {
         });
     }
 
+
+    //Loads format config data for both static and dynamic transformations
     @RequiresApi(api = Build.VERSION_CODES.Q)
     public void LoadSpanPreferences(JSONObject savedConfig){
         //Update with actual file
@@ -101,6 +113,8 @@ public class PDFContentManager {
         }
     }
 
+
+    //Sets rule of transformation
     @RequiresApi(api = Build.VERSION_CODES.Q)
     void UnpackFormatRule(String formattingRule, JSONObject templates, ArrayList<ContentFormater> list) throws JSONException {
         short formatRule = -1;
@@ -114,6 +128,7 @@ public class PDFContentManager {
             case "cascade":
                 if((Boolean) templates.get("enabled")){
                     cascadeFlag = true;
+                    return;
                 }
             default:
                 Log.d("RULE", "Defaulted, unrecognized rule: " + formattingRule);
@@ -126,6 +141,7 @@ public class PDFContentManager {
         }
     }
 
+    //Creates and caches correct ContentFormatter object
     @RequiresApi(api = Build.VERSION_CODES.Q)
     void AddTemplate(String key, Object value, ArrayList<ContentFormater> list, int rule) throws JSONException {
         switch (key){
@@ -162,6 +178,7 @@ public class PDFContentManager {
     public void Decomission(){
         pdfScraperWorker.ClearSpans();
     }
+
     public class PDFBoxInitializer implements Runnable {
         Context context;
         public PDFBoxInitializer(Context context){
@@ -174,6 +191,7 @@ public class PDFContentManager {
         }
     }
 
+    //extracts content, loads spans
     public class PDFScraper implements Runnable {
 
         private Uri PDFUri;
@@ -271,6 +289,7 @@ public class PDFContentManager {
             }
         }
 
+        //Reads through page and marks all paragraph and leading word bounds
         void UpdateFormatInfo(String extractedText){
             ArrayList<int[]> paragraphEndings = new ArrayList<int[]>();
             ArrayList<ArrayList<int[]>> leadingWordSpans = new ArrayList<ArrayList<int[]>>();

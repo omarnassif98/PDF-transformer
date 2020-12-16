@@ -27,6 +27,7 @@ public class InfoScraper extends PDFTextStripper {
 
     }
 
+    //Gets character info recursively, splits paragraphs based on the horizontal position of sentence starts
     @Override
     protected void writeString(String string, List<TextPosition> textPositions) throws  IOException{
         float currentFirstX = textPositions.get(0).getXDirAdj(), currentFirstY = textPositions.get(0).getYDirAdj();

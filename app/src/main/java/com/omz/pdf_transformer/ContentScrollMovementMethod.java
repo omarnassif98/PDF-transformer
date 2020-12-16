@@ -11,6 +11,11 @@ import android.widget.TextView;
 
 //adapted from: https://gist.github.com/mpetlyuk/ec2d64659fbedfd47f7e0e650c9608dd
 
+
+/*
+There is a well known incompatability with standard ScrollMovementMethods and ClickableSpans
+so this class is a custom movement method that differintiates between a click and a scroll action
+ */
 public class ContentScrollMovementMethod extends LinkMovementMethod {
     private float initialX;
     private float initialY;
@@ -19,6 +24,8 @@ public class ContentScrollMovementMethod extends LinkMovementMethod {
     private boolean isClick(float xStart, float yStart, float xEnd, float yEnd){
         return Math.abs(xEnd - xStart) < CLICK_MARGIN && Math.abs(yEnd - yStart) < CLICK_MARGIN;
     }
+
+    //Measures the travel between touch ACTION_DOWN and ACTION_UP. If it is small enough, its a click and sends a touch event to a clickable span if applicable
 
     @Override
     public boolean onTouchEvent(TextView widget, Spannable buffer, MotionEvent event){

@@ -6,6 +6,7 @@ import android.util.Log;
 
 public class ColorFormatter extends SpannableFormatterObject {
 
+    //Sets up parent object to be ready to instatiate ForegroundColorSpan ojects
     public ColorFormatter(String color, int rule)  {
         this.formattingRule = rule;
         int colorVal = Color.parseColor(color);
